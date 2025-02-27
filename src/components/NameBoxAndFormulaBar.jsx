@@ -5,7 +5,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   background-color: #f1f3f4;
-  padding: 10px;
+  padding: 5px;
   border-bottom: 1px solid #ddd;
   gap: 10px; // Adds space between items
 `;

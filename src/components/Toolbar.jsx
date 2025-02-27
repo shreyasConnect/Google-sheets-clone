@@ -23,19 +23,19 @@ const ToolbarButton = styled.button`
 `;
 
 const Toolbar = () => {
-    return (
-        <ToolbarContainer>
-            <ToolbarButton>File</ToolbarButton>
-            <ToolbarButton>Edit</ToolbarButton>
-            <ToolbarButton>View</ToolbarButton>
-            <ToolbarButton>Insert</ToolbarButton>
-            <ToolbarButton>Format</ToolbarButton>
-            <ToolbarButton>Data</ToolbarButton>
-            <ToolbarButton>Tools</ToolbarButton>
-            <ToolbarButton>Extensions</ToolbarButton>
-            <ToolbarButton>Help</ToolbarButton>
-        </ToolbarContainer>
-    );
+  return (
+    <ToolbarContainer>
+      <ToolbarButton>File</ToolbarButton>
+      <ToolbarButton>Edit</ToolbarButton>
+      <ToolbarButton>View</ToolbarButton>
+      <ToolbarButton>Insert</ToolbarButton>
+      <ToolbarButton>Format</ToolbarButton>
+      <ToolbarButton>Data</ToolbarButton>
+      <ToolbarButton>Tools</ToolbarButton>
+      <ToolbarButton>Extensions</ToolbarButton>
+      <ToolbarButton>Help</ToolbarButton>
+    </ToolbarContainer>
+  );
 };
 
 export default Toolbar;

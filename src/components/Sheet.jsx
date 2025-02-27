@@ -8,26 +8,27 @@ const SheetContainer = styled.div`
   grid-template-rows: 30px repeat(50, 25px); // 50 rows
   border: 1px solid #ddd;
   width: 100%; // Takes full width of the parent
-  height: auto; // Height adjusts based on content
-  min-height: auto; // Ensures it takes at least the full viewport height
-  overflow-x: auto; // Enables horizontal scrolling
-  overflow-y: auto; // Disables vertical scrolling
+  height: 100%; // Fixed height to fit all rows
+  overflow: auto; // Enables horizontal scrolling
+  
 `;
 
+// HeaderCell component
 const HeaderCell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #ddd;
-  background-color: ${({ isHighlighted }) => (isHighlighted ? '#e6f7ff' : '#f1f3f4')}; // Light blue background when highlighted
+  background-color: ${(props) => (props.$isHighlighted ? '#e6f7ff' : '#f1f3f4')}; // Use transient prop
   font-weight: bold;
 `;
 
+// RowNumberCell component
 const RowNumberCell = styled(HeaderCell)`
-  background-color: ${({ isHighlighted }) => (isHighlighted ? '#e6f7ff' : '#f1f3f4')}; // Light blue background when highlighted
+  background-color: ${(props) => (props.$isHighlighted ? '#e6f7ff' : '#f1f3f4')}; // Use transient prop
 `;
 
-const Sheet = ({ selectedCell, onSelectCell, cellFormats }) => {
+const Sheet = ({ selectedCell, onSelectCell, cellFormats, cellContent, onCellContentChange }) => {
     const rows = 50;
     const cols = 26;
 
@@ -43,7 +44,7 @@ const Sheet = ({ selectedCell, onSelectCell, cellFormats }) => {
             {columnHeaders.map((header, index) => (
                 <HeaderCell
                     key={index}
-                    isHighlighted={selectedCell.colIndex === index} // Highlight if this column is selected
+                    $isHighlighted={selectedCell.colIndex === index} // Use transient prop
                 >
                     {header}
                 </HeaderCell>
@@ -54,7 +55,7 @@ const Sheet = ({ selectedCell, onSelectCell, cellFormats }) => {
                 <React.Fragment key={rowIndex}>
                     {/* Row number */}
                     <RowNumberCell
-                        isHighlighted={selectedCell.rowIndex === rowIndex} // Highlight if this row is selected
+                        $isHighlighted={selectedCell.rowIndex === rowIndex} // Use transient prop
                     >
                         {rowIndex + 1}
                     </RowNumberCell>
@@ -71,16 +72,19 @@ const Sheet = ({ selectedCell, onSelectCell, cellFormats }) => {
                             color: '#000000',
                             backgroundColor: '#ffffff',
                         };
+                        const content = cellContent[cellKey] || ''; // Get cell content
                         return (
                             <Cell
                                 key={cellKey}
                                 rowIndex={rowIndex}
                                 colIndex={colIndex}
-                                isSelected={
+                                $isSelected={
                                     selectedCell.rowIndex === rowIndex && selectedCell.colIndex === colIndex
                                 }
-                                onSelect={() => onSelectCell({ rowIndex, colIndex })}
+                                onSelect={() => onSelectCell(rowIndex, colIndex)}
                                 formatting={formatting}
+                                content={content}
+                                onCellContentChange={onCellContentChange}
                             />
                         );
                     })}

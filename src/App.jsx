@@ -10,17 +10,20 @@ const AppContainer = styled.div`
   flex-direction: column;
   width: 100vw; // Full viewport width
   height: 100vh; // Full viewport height
-  overflow: hidden; // Prevents scrollbars on the app container
 `;
 
-
+const MainContent = styled.div`
+  flex: 1; // Takes up remaining space
+  overflow: hidden; // Prevents extra scrollbars
+`;
 
 function App() {
-  // Set the default selected cell as A1 (rowIndex: 0, colIndex: 0)
   const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, colIndex: 0 });
   const [cellFormats, setCellFormats] = useState({});
-  const [formula, setFormula] = useState('');
+  const [cellContent, setCellContent] = useState({}); // Track cell content
+  const [formula, setFormula] = useState(''); // Formula input value
 
+  // Handle formatting changes
   const handleFormattingChange = (key, value) => {
     if (selectedCell.rowIndex !== null && selectedCell.colIndex !== null) {
       const cellKey = `${selectedCell.rowIndex}-${selectedCell.colIndex}`;
@@ -34,8 +37,41 @@ function App() {
     }
   };
 
+  // Handle formula input changes
   const handleFormulaChange = (value) => {
     setFormula(value);
+
+    // Update the content of the selected cell
+    if (selectedCell.rowIndex !== null && selectedCell.colIndex !== null) {
+      const cellKey = `${selectedCell.rowIndex}-${selectedCell.colIndex}`;
+      setCellContent((prev) => ({
+        ...prev,
+        [cellKey]: value,
+      }));
+    }
+  };
+
+  // Handle cell selection
+  const handleCellSelect = (rowIndex, colIndex) => {
+    setSelectedCell({ rowIndex, colIndex });
+
+    // Update the formula input with the content of the selected cell
+    const cellKey = `${rowIndex}-${colIndex}`;
+    setFormula(cellContent[cellKey] || '');
+  };
+
+  // Handle real-time cell content updates
+  const handleCellContentChange = (rowIndex, colIndex, content) => {
+    const cellKey = `${rowIndex}-${colIndex}`;
+    setCellContent((prev) => ({
+      ...prev,
+      [cellKey]: content,
+    }));
+
+    // Update the formula input if the updated cell is the selected cell
+    if (rowIndex === selectedCell.rowIndex && colIndex === selectedCell.colIndex) {
+      setFormula(content);
+    }
   };
 
   return (
@@ -51,7 +87,15 @@ function App() {
         formula={formula}
         onFormulaChange={handleFormulaChange}
       />
-      <Sheet selectedCell={selectedCell} onSelectCell={setSelectedCell} cellFormats={cellFormats} />
+      <MainContent>
+        <Sheet
+          selectedCell={selectedCell}
+          onSelectCell={handleCellSelect}
+          cellFormats={cellFormats}
+          cellContent={cellContent}
+          onCellContentChange={handleCellContentChange}
+        />
+      </MainContent>
     </AppContainer>
   );
 }
